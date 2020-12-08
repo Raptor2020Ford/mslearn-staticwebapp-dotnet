@@ -1,11 +1,18 @@
 ﻿<div class="card-content">
     <div class="content">
-        <div class="name">@Name</div>
+        <div class="name">@MlsNumber @Price</div>
         <div class="description">@Description</div>
+
+        <ButtonFooter Class="delete-item"
+                      IconClasses="fas fa-check"
+                      OnClick="@(async _ => await MarkHouse.InvokeAsync(MlsNumber))"
+                      Label="Yes" />
     </div>
 </div>
 
 @code {
-    [Parameter] public string Name { get; set; }
+    [Parameter] public string MlsNumber { get; set; }
+    [Parameter] public string Price { get; set; }
     [Parameter] public string Description { get; set; }
+    [Parameter] public EventCallback<String> MarkHouse { get; set; }
 }

@@ -1,0 +1,27 @@
+﻿@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div>@ErrorMessage</div>
+}
+else if (Houses != null && Houses.Count() > 0)
+{
+    @foreach (var house in Houses)
+    {
+        <tr>
+            <td>@house.MlsNumber</td>
+            <td>@house.Property.Address.AddressText</td>
+            <td>@house.Property.Price</td>
+            <td>@house.PublicRemarks</td>
+
+        </tr>
+    }
+}
+else
+{
+    <div>Loading data...</div>
+}
+@code {
+    [Parameter] public IEnumerable<House> Houses { get; set; }
+    [Parameter] public Action<House, StatusEnum> MarkHouse { get; set; }
+    [Parameter] public EventCallback<House> SelectHouse { get; set; }
+    [Parameter] public string ErrorMessage { get; set; }
+}

@@ -1,0 +1,126 @@
+﻿@page "/HouseMain"
+@inject HttpClient http
+@inject NavigationManager navigation
+
+
+<ListHeader Title="Houses"
+            HandleRefresh="@HandleRefresh"
+            RoutePath="/houseMain" />
+
+@*<BSTable IsStriped="true" IsSmall="true" @ref="SortableRef">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col"> <a href="javascript:void(0)" @onclick="@(() => SortableRef.Sort()" MlsNumber"))" @onclick:preventDefault>MlsNumber</a> </th>
+                <th scope="col">Address</th>
+                <th scope="col">Price</th>
+                <th scope="col">Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            <HouseListTable ErrorMessage="@errorMessage"
+                            Houses="@houses"
+                            SelectHouse="@SelectHouse" />
+        </tbody>
+    </BSTable>*@
+
+@if (houses != null && houses.Count() > 0)
+{
+    <BSDataTable Items="houses" Context="item" IsResponsive="true" IsStriped="true" IsSmall="true" @ref="SortableRef">
+        <HeaderTemplate>
+            <tr>
+                <th scope="col"><a href="javascript:void(0)" @onclick="@(()=> SortableRef.Sort("MlsNumber"))" @onclick:preventDefault>MlsNumber</a> </th>
+                <th scope="col"><a href="javascript:void(0)" @onclick="@(() => SortableRef.Sort("Price"))" @onclick:preventDefault>First</a></th>
+                <th scope="col"><a href="javascript:void(0)" @onclick="@(() => SortableRef.Sort("Property.Price"))" @onclick:preventDefault>First</a></th>
+                <th scope="col"><a href="javascript:void(0)" @onclick="@(() => SortableRef.Sort("DetailsLink"))" @onclick:preventDefault>DetailsLink</a></th>
+                <th scope="col">Action</th>
+            </tr>
+        </HeaderTemplate>
+        <ItemTemplate>
+            <th scope="row">@item.MlsNumber</th>
+            <td>@item.Property.Price</td>
+            <td>@item.Property.Price</td>
+            <td>@item.DetailsLink</td>
+            <td>
+                <BSButtonGroup>
+                    <BSButton Color="Color.Success"  @onclick="@(async _ => await SelectHouse.InvokeAsync(item))">Yes</BSButton>
+                    <BSButton Color="Color.Warning">Maybe</BSButton>
+                    <BSButton Color="Color.Danger">No</BSButton>
+                </BSButtonGroup>
+            </td>
+        </ItemTemplate>
+    </BSDataTable>
+}
+
+@code {
+
+
+}
+
+<div class="content-container">
+    <div class="columns is-multiline is-variable">
+        <div class="column is-8">
+            @*<HouseList ErrorMessage="@errorMessage"
+                Houses="@houses"
+                SelectHouse="@SelectHouse"
+                DeleteHouse="@DeleteHouse" />*@
+        </div>
+    </div>
+
+    <ModalYesNo Message="@modalMessage"
+                OnNo="@CloseModal"
+                OnYes="@DeleteFromModal"
+                Show="@showModal" />
+</div>
+
+
+@code {
+    private string errorMessage = "";
+    private List<House> houses;
+    private BSDataTable<House> SortableRef { get; set; }
+
+    private House houseToDelete;
+    private bool showModal;
+    private string modalMessage = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        houses = await http.GetFromJsonAsync<List<House>>("api/house");
+    }
+
+    private async Task HandleRefresh()
+    {
+        houses = await http.GetFromJsonAsync<List<House>>("api/house");
+    }
+
+    private void SelectHouse(House house)
+    {
+        navigation.NavigateTo($"/product/{house.Id}");
+    }
+
+    private void DeleteHouse(House house)
+    {
+        houseToDelete = house;
+        showModal = true;
+        modalMessage = $"Would you like to delete {houseToDelete.MlsNumber}";
+    }
+
+    private void CloseModal()
+    {
+        houseToDelete = null;
+        showModal = false;
+    }
+
+    private async Task DeleteFromModal()
+    {
+        await http.DeleteAsync($"api/house/{houseToDelete.Id}");
+        await HandleRefresh();
+        houseToDelete = null;
+        showModal = false;
+    }
+
+    private async Task MarkHouse(String mlsNumber, StatusEnum status)
+    {
+        await http.PutAsJsonAsync($"api/house/{mlsNumber}", status);
+        await HandleRefresh();
+    }
+}
