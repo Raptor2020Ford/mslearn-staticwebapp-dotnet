@@ -23,7 +23,7 @@
         </tbody>
     </BSTable>*@
 
-@if (houses != null && houses.Count() > 0)
+@if (houses != null && houses.Any())
 {
     <BSDataTable Items="houses" Context="item" IsResponsive="true" IsStriped="true" IsSmall="true" @ref="SortableRef">
         <HeaderTemplate>
@@ -42,19 +42,15 @@
             <td>@item.DetailsLink</td>
             <td>
                 <BSButtonGroup>
-                    <BSButton Color="Color.Success" >Yes</BSButton>
-                    <BSButton Color="Color.Warning">Maybe</BSButton>
-                    <BSButton Color="Color.Danger">No</BSButton>
+                    <BSButton Color="Color.Success" @onclick="@(e => MarkHouse(item.MlsNumber, StatusEnum.Yes))">Yes</BSButton>
+                    <BSButton Color="Color.Warning" @onclick="@(e => MarkHouse(item.MlsNumber, StatusEnum.Maybe))">Maybe</BSButton>
+                    <BSButton Color="Color.Danger"  @onclick="@(e => MarkHouse(item.MlsNumber, StatusEnum.No))">No</BSButton>
                 </BSButtonGroup>
             </td>
         </ItemTemplate>
     </BSDataTable>
 }
 
-@code {
-
-
-}
 
 <div class="content-container">
     <div class="columns is-multiline is-variable">
