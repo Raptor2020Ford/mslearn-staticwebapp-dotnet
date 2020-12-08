@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Data
 {
@@ -184,17 +185,28 @@ namespace Data
         public Business Business { get; set; }
         public Land Land { get; set; }
         public AlternateURL AlternateURL { get; set; }
-        public string DetailsLink
-        {
-            get
-            {
-                return AlternateURL?.DetailsLink ?? "";
-            }
-        }
         public string PostalCode { get; set; }
         public string RelativeDetailsURL { get; set; }
         public List<OpenHouse> OpenHouse { get; set; }
         public StatusEnum status { get; set; }
+
+        //additional parameters
+        public string DetailsLink => AlternateURL?.DetailsLink ?? "";
+        public string AddressText => Property?.Address?.AddressText ?? "";
+        public string Bedrooms => Building?.Bedrooms ?? "";
+        public string Bathrooms => Building?.BathroomTotal ?? "";
+        public string NeighborhoodName
+        {
+            get
+            {
+                string addressText = Property?.Address?.AddressText ?? "";
+                int firstChar = addressText.LastIndexOf('|');
+                addressText = addressText.Substring(firstChar + 1);
+                return addressText.Substring(0, addressText.IndexOf(','));
+            }
+        }
+
+        public string Price => Property?.Price ?? "";
     }
 
     public class Pin

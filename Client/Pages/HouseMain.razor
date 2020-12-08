@@ -28,23 +28,32 @@
     <BSDataTable Items="houses" Context="item" IsResponsive="true" IsStriped="true" IsSmall="true" @ref="SortableRef">
         <HeaderTemplate>
             <tr>
-                <th scope="col"><a href="javascript:void(0)" @onclick="@(()=> SortableRef.Sort("MlsNumber"))" @onclick:preventDefault>MlsNumber</a> </th>
-                <th scope="col"><a href="javascript:void(0)" @onclick="@(() => SortableRef.Sort("Price"))" @onclick:preventDefault>First</a></th>
-                <th scope="col"><a href="javascript:void(0)" @onclick="@(() => SortableRef.Sort("Property.Price"))" @onclick:preventDefault>First</a></th>
-                <th scope="col"><a href="javascript:void(0)" @onclick="@(() => SortableRef.Sort("DetailsLink"))" @onclick:preventDefault>DetailsLink</a></th>
+                <th scope="col"><a href="javascript:void(0)" @onclick="@(()=> SortableRef.Sort("NeighborhoodName"))" @onclick:preventDefault>NeighborhoodName</a> </th>
+                <th scope="col"><a href="javascript:void(0)" @onclick="@(() => SortableRef.Sort("Bedrooms"))" @onclick:preventDefault>Bedrooms</a></th>
+                <th scope="col"><a href="javascript:void(0)" @onclick="@(() => SortableRef.Sort("Bathrooms"))" @onclick:preventDefault>Bathrooms</a></th>
+                <th scope="col"><a href="javascript:void(0)" @onclick="@(() => SortableRef.Sort("AddressText"))" @onclick:preventDefault>AddressText</a></th>
+                <th scope="col"><a href="javascript:void(0)" @onclick="@(() => SortableRef.Sort("PublicRemarks"))" @onclick:preventDefault>PublicRemarks</a></th>
+                <th scope="col"><a href="javascript:void(0)" @onclick="@(() => SortableRef.Sort("Price"))" @onclick:preventDefault>Price</a></th>
+                <th scope="col">DetailsLink</th>
                 <th scope="col">Action</th>
             </tr>
         </HeaderTemplate>
         <ItemTemplate>
-            <th scope="row">@item.MlsNumber</th>
-            <td>@item.Property.Price</td>
-            <td>@item.Property.Price</td>
-            <td>@item.DetailsLink</td>
+            <th scope="row">@item.NeighborhoodName</th>
+            <td scope="row">@item.Bedrooms</td>
+            <td scope="row">@item.Bathrooms</td>
+            <td scope="row">@item.AddressText</td>
+            <td scope="row">@item.PublicRemarks</td>
+            <td scope="row">@item.Price</td>
+            <td>
+                <a href="@("https://www.realtor.ca" + item.RelativeDetailsURL)" target="_blank">Realtor</a>
+                <a href="@item.DetailsLink" target="_blank">More info</a>
+            </td>
             <td>
                 <BSButtonGroup>
                     <BSButton Color="Color.Success" @onclick="@(e => MarkHouse(item.MlsNumber, StatusEnum.Yes))">Yes</BSButton>
                     <BSButton Color="Color.Warning" @onclick="@(e => MarkHouse(item.MlsNumber, StatusEnum.Maybe))">Maybe</BSButton>
-                    <BSButton Color="Color.Danger"  @onclick="@(e => MarkHouse(item.MlsNumber, StatusEnum.No))">No</BSButton>
+                    <BSButton Color="Color.Danger" @onclick="@(e => MarkHouse(item.MlsNumber, StatusEnum.No))">No</BSButton>
                 </BSButtonGroup>
             </td>
         </ItemTemplate>
